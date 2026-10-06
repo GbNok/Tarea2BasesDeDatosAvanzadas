@@ -1,9 +1,9 @@
-CREATE KEYSPACE actors
-	WITH replication = {
-	'class': 'NetworkTopologyStrategy',
-	'datacenter1': 3
-};
-USE actors;
+// CREATE KEYSPACE actors
+// 	WITH replication = {
+// 	'class': 'NetworkTopologyStrategy',
+// 	'datacenter1': 3
+// };
+// USE actors;
 
 CREATE TABLE actors.actores_nacionalidad (
     nacionalidad text,
