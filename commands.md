@@ -112,6 +112,62 @@ FROM actores
 WHERE nacionalidad = 'Chile';
 ```
 
+### 3.2 Alta Disponibilidad
+
+Verificar nodos funcionando
+```sh
+docker exec -it cassandra1 nodetool status
+```
+
+Queries de prueba
+```sh
+CONSISTENCY ONE;
+SELECT nombre_actor FROM actores WHERE id_actor = 1;
+INSERT INTO actores (id_actor, nombre_actor) VALUES (100, 'Laszlo Krasznahorkai');
+SELECT nombre_actor FROM actores WHERE id_actor = 100;
+```
+
+Detener nodos 
+```sh
+docker stop cassandra3
+docker stop cassandra2
+```
+
+```sh
+CONSISTENCY ONE;
+SELECT * FROM actores WHERE id_actor = 1;
+INSERT INTO actores (id_actor, nombre_actor) VALUES (101, 'Robert Jordan');
+SELECT * FROM actores WHERE id_actor = 101;
+
+CONSISTENCY QUORUM;
+SELECT * FROM actores WHERE id_actor = 1;
+INSERT INTO actores (id_actor, nombre_actor) VALUES (102, 'Dan Simons');
+SELECT * FROM actores WHERE id_actor = 102;
+
+CONSISTENCY ALL;
+SELECT * FROM actores WHERE id_actor = 1;
+INSERT INTO actores (id_actor, nombre_actor) VALUES (103, 'Haruki Murakami');
+SELECT * FROM actores WHERE id_actor = 103;
+```
+
+### 3.3 Recuperacion
+
+Recuperar nodos
+```sh
+docker start cassandra2 cassandra3
+```
+
+Verificar estado
+```sh
+docker exec -it cassandra1 nodetool status
+```
+
+Comando de prueba: (este se repite para cada id nueva agregada)
+```sh
+SELECT * FROM actores WHERE id_actor = 101;
+```
+
+
 ### 3.4 Actualización
 Archivo de actualización: actualizacion.py
 ``` sh
